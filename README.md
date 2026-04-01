@@ -7,6 +7,14 @@ Built with [Textual](https://textual.textualize.io/) and [pylearnspec](https://g
 ![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue)
 ![License MIT](https://img.shields.io/badge/license-MIT-green)
 
+<p align="center">
+  <img src="screenshots/welcome.svg" width="700" alt="Welcome screen" />
+</p>
+
+<p align="center">
+  <img src="screenshots/quiz-answered.svg" width="700" alt="Quiz gameplay with feedback" />
+</p>
+
 ## Features
 
 - Fetch `.quiz.md` files from any GitHub repo or URL
@@ -43,7 +51,12 @@ quizmd learnspec/quizmd
 
 # Direct — point to a specific file
 quizmd https://github.com/learnspec/quizmd/blob/main/examples/baroque-music.quiz.md
+
+# Try the bundled sample
+quizmd learnspec/quizmd-tui-client
 ```
+
+A sample quiz is included at [`samples/intro-to-space.quiz.md`](samples/intro-to-space.quiz.md).
 
 ## Keyboard shortcuts
 

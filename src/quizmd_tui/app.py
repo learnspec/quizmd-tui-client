@@ -169,13 +169,13 @@ Screen {
     border-left: thick $error;
 }
 
-#choice-feedback {
+.choice-feedback-text {
     color: $text-muted;
     margin-top: 0;
     margin-left: 4;
     display: none;
 }
-#choice-feedback.visible {
+.choice-feedback-text.visible {
     display: block;
 }
 
@@ -513,10 +513,12 @@ class QuizScreen(Screen):
         yield Footer()
 
     def on_mount(self) -> None:
+        self._mounted = True
         self._render_question()
 
     def watch_current_index(self) -> None:
-        self._render_question()
+        if getattr(self, "_mounted", False):
+            self._render_question()
 
     def _current_q(self) -> Question:
         return self.questions[self.current_index]
@@ -569,7 +571,7 @@ class QuizScreen(Screen):
                 label = f"  {chr(65 + display_idx)})  {choice.text}"
                 btn = Button(label, classes="choice-btn", name=str(orig_idx))
                 container.mount(btn)
-            container.mount(Static("", id="choice-feedback"))
+            container.mount(Static("", classes="choice-feedback-text"))
         elif q.q_type == "open":
             open_input.display = True
             open_input.value = ""
@@ -736,12 +738,10 @@ class QuizScreen(Screen):
 
                 # Show per-choice feedback
                 if orig_idx in self.selected_choices and choice.feedback:
-                    try:
-                        fb_label = self.query_one("#choice-feedback", Static)
+                    for fb_label in self.query(".choice-feedback-text"):
                         fb_label.update(f"  💬 {choice.feedback}")
                         fb_label.add_class("visible")
-                    except NoMatches:
-                        pass
+                        break
 
         # Global feedback
         fb_area = self.query_one("#feedback-area", Container)
