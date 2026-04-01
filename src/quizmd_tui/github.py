@@ -66,9 +66,16 @@ def parse_source(raw: str) -> QuizSource:
     if m:
         return QuizSource(m["owner"], m["repo"], "HEAD", "")
 
+    # owner/repo/path (subpath shorthand)
+    parts = raw.split("/", 2)
+    if len(parts) >= 3 and all(parts):
+        owner, repo = parts[0], parts[1]
+        path = parts[2]
+        return QuizSource(owner, repo, "HEAD", path)
+
     raise ValueError(
         f"Cannot parse source: {raw!r}. "
-        "Use owner/repo, a GitHub URL, or a raw .quiz.md URL."
+        "Use owner/repo, owner/repo/folder, a GitHub URL, or a .quiz.md path."
     )
 
 
@@ -104,9 +111,14 @@ async def list_quiz_files(
     resp.raise_for_status()
     tree = resp.json().get("tree", [])
 
+    # Filter by source.path prefix when pointing to a folder
+    prefix = source.path.rstrip("/") + "/" if source.path and not source.path.endswith(".quiz.md") else ""
+
     files: list[RepoFile] = []
     for item in tree:
         if item["type"] == "blob" and item["path"].endswith(".quiz.md"):
+            if prefix and not item["path"].startswith(prefix):
+                continue
             name = item["path"].rsplit("/", 1)[-1]
             files.append(RepoFile(path=item["path"], name=name))
     files.sort(key=lambda f: f.path)
