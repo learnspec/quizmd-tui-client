@@ -92,6 +92,10 @@ A sample quiz is included at [`samples/intro-to-space.quiz.md`](samples/intro-to
 | Match pairs  | Display |
 | Order        | Display |
 
+## Maintainers
+
+This repository is part of the [LearnSpec](https://learnspec.org) suite, initiated and maintained by [memoneo](https://memoneo.app). Issues and pull requests are welcome.
+
 ## License
 
 MIT
